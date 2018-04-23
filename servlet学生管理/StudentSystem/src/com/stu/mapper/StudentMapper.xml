@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stu.mapper.StudentMapper">
+
+<insert id="saveStudent" parameterType="student">
+    insert into tb_student values(tb_stuid_seq.nextval,#{sno},#{suName},#{birthday},#{gender})
+</insert>
+
+<select id="findByName" resultMap="findstu" parameterType="string">
+    select * from tb_student where suname like '%'||#{v}||'%'
+</select>
+<select id="findBySno" resultMap="findstu" parameterType="string">
+    select * from tb_student where sno = #{v}
+</select>
+
+<delete id="delById" parameterType="int">
+    delete from tb_student where id = #{v}
+</delete>
+<update id="update" parameterType="student">
+    update tb_student set sno=#{sno},
+    suname=#{suName},birthday=#{birthday},gender=#{gender} where id = #{id}
+</update>
+<resultMap type="student" id="findstu">
+	<id column="id" property="id"/>
+	<result column="sno" property="sno"/>
+	<result column="suname" property="suName"/>
+	<result column="birthday" property="birthday"/>
+	<result column="gender" property="gender"/>
+</resultMap>
+</mapper>

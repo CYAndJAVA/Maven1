@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<!-- 需要引入外部的.properties文件 -->
+	<properties resource="dbConfig.properties"></properties>
+	
+	<!-- 设置 -->
+   <settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		
+				 <!-- 
+				lazyLoadingEnabled：设置懒加载，默认为false。如果为false：则所有相关联的都会被初始化加载。
+				aggressiveLazyLoading：默认为true。当设置为true时，懒加载的对象可能被任何懒属性全部加载；否则，每个属性按需加载。
+	  -->
+		 <!-- 打开延迟加载的开关 -->  
+		<!-- <setting name="lazyLoadingEnabled" value="true" />   -->  
+		<!-- 将积极加载改为消息加载即按需加载  -->
+		<setting name="aggressiveLazyLoading" value="false"/> 
+		<!-- 改变默认配置,使只有调用clone方法的时候才会触发完全加载,其余的toString,hashcode,equals仍然会采用延迟加载 -->
+ 		<setting name="lazyLoadTriggerMethods" value="clone"/>  
+	</settings>
+
+	<!-- 设置别名 -->
+	<typeAliases>
+		<!-- 针对每个实体类,一一取别名 -->
+		<!-- <typeAlias type="com.mybatis.entity.User" alias="u"/> -->
+		
+		<!-- 可以直接扫描包,即可
+			 默认的别名都是类名,但是类名的首字母变小写即可.比如User,那么默认的别名就是user
+		 -->
+		<package name="com.stu.entity"/>
+		
+	</typeAliases>
+	
+	<typeHandlers>
+       <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler"
+             javaType="com.stu.entity.enums.Gender"/>
+    </typeHandlers>
+
+
+	<!-- 配置环境[environments],
+	     实际开发中,测试环境和开发环境需要有不同的配置.
+	     通常默认的default取名叫做development
+	-->  
+	<environments default="development">
+		<!-- 此处的id的值都是唯一的 -->
+		<environment id="development">
+		    <!-- 配置事务管理器 - 此处配置就是直接使用了jdbc中的提交和回滚设置,依赖于从数据源得到的链接来
+		                     管理事务的作用域
+		                     
+		                     事务的控制由mybatis框架来进行管理
+		     -->
+			<transactionManager type="JDBC"></transactionManager>
+			<!-- 配置数据源 
+			           此处的type属性有三种:
+			           
+			     1.UNPOOLED:这个数据源的实现只是每次被请求的时候打开和关闭连接[类似于jdbc中的标准的链接方式DriverManager的方式]
+			     			对在及时可用连接方面没有性能要求的建档的应用程序是一个很好的选择.
+			     
+			     2.POOLED:这种数据源的实现利用"池"的概念将JDBC链接对象组织起来了,避免了创建
+			     		    新的链接实例时所花的初始化和认证的时间,对于web应用程序能够快速处理并发
+			     		    请求的响应.
+			     
+			     3.JNDI
+			-->
+			<dataSource type="POOLED">
+			    <!-- 后期可以将这些配置文件提取到一个外部的.properties属性文件中 -->
+				<!-- 关于jdbc的连接 -->
+				<!-- 
+				<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+				<property name="url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+				<property name="username" value="jsd1711"/>
+				<property name="password" value="jsd1711"/> 
+				-->
+				
+				<property name="driver" value="${driverClass}"/>
+				<property name="url" value="${url}"/>
+				<property name="username" value="${user}"/>
+				<property name="password" value="${password}"/> 
+				
+			</dataSource>
+		</environment>	
+	</environments>
+	
+	<!-- 添加映射文件 -->
+	<mappers>
+		 <!-- 扫描单个mapper的映射文件 -->
+		 <!-- <mapper resource="com/mybatis/mapper/UserMapper.xml"/>	 --> 
+		
+		<!-- 直接扫描映射文件所在的包
+		            要求:必须接口和映射文件在同一个目录中
+		 -->
+		<package name="com.stu.mapper"/>
+		
+	</mappers>
+</configuration>

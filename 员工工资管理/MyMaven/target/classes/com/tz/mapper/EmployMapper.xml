@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tz.mapper.EmployMapper">
+
+    <insert id="insertImploy" parameterType="Employee">
+        insert into tb_employ values(tb_em_id.nextval,#{emnumber},
+        #{name},#{gender},#{zhicheng},#{worktime},#{phone})
+    </insert>
+
+    <select id="findEmByNumber" resultType="Employee">
+        select * from tb_employ
+        <where>
+            <if test="emnumber!=null">
+                emnumber = #{emnumber}
+            </if>   
+        </where>
+    </select>
+    <select id="findById" resultType="Employee">
+        select * from tb_employ where id=#{v}
+    </select>
+    
+    <delete id="deleteEmByNumber" parameterType="String" >
+        delete from tb_employ where emnumber=#{v}
+    </delete>
+    
+    <update id="updateEmployee" parameterType="Employee">
+        update tb_employ set 
+        name=#{name},
+        gender=#{gender},
+        zhicheng=#{zhicheng},
+        worktime=#{worktime},
+        phone=#{phone} where emnumber=#{emnumber}
+    </update>
+    
+</mapper>
